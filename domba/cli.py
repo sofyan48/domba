@@ -7,9 +7,12 @@ Options:
   -v, --version                          Print version information and quit
 
 Commands:
-  login         Login Command
+  zone            Zone Record Configuration Zone Command
+  command         CZone onfiguration Command
+  envi            Environment Configuration Command
+  start           Starting Agent
 
-Run 'prox COMMAND --help' for more information on a command.
+Run 'domba COMMAND --help' for more information on a command.
 """
 
 from inspect import getmembers, isclass
