@@ -1,6 +1,6 @@
 from domba.clis.base import Base
-from domba.libs import knot_lib
 from domba.libs import env_lib
+from domba.libs import knot_lib
 from domba.libs import kafka_lib
 import os
 
@@ -25,9 +25,12 @@ class Start(Base):
         
         if self.args['slave']:
             try:
+                knot_lib.utils.log_err("Connecting to broker : "+broker)
                 consumer = kafka_lib.get_kafka_consumer(broker, topic, group)
             except Exception as e:
-                print(e)
+                knot_lib.utils.log_err("Not Connecting to broker : "+broker)
+                knot_lib.utils.log_err("Error: "+ str(e))
+                exit()
             try:
                 for message in consumer:
                     type_command = None
@@ -45,15 +48,18 @@ class Start(Base):
                         print("Type Command Not Found")
             except KeyboardInterrupt:
                 print("Exited")
-            except Exception as e:
-                env_lib.utils.log_err(str(e))
+            # except Exception as e:
+            #     env_lib.utils.log_err(str(e))
             exit()
 
         if self.args['master']:
             try:
+                knot_lib.utils.log_err("Connecting to broker : "+broker)
                 consumer = kafka_lib.get_kafka_consumer(broker, topic, group)
             except Exception as e:
-                print(e)
+                knot_lib.utils.log_err("Not Connecting to broker : "+broker)
+                knot_lib.utils.log_err("Error: "+ str(e))
+                exit()
             try:
                 for message in consumer:
                     type_command = None
@@ -71,6 +77,6 @@ class Start(Base):
                         print("Type Command Not Found")
             except KeyboardInterrupt:
                 print("Exited")
-            except Exception as e:
-                env_lib.utils.log_err(str(e))
+            # except Exception as e:
+            #     env_lib.utils.log_err(str(e))
             exit()
