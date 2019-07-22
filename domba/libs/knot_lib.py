@@ -1,7 +1,6 @@
 from domba.libs.libcommand.parse import parser
 from domba.libs import command_lib
 from domba.libs import utils
-from domba.libs import kafka_lib
 
 def libknot_json(data):
     initialiaze_command = parser.initialiaze(data)
@@ -95,12 +94,11 @@ def parsing_data_general(data, broker):
     data = {
         "command": json_data
     }
-    result_command = initialiaze_command_general(data, id_zone)
-    kafka_lib.producer_send(broker, "api_general", result_command)
-    print(result_command['status'])
+    initialiaze_command_general(data, id_zone)
 
 def initialiaze_command_general(data, id_zone):
     report_command = libknot_json(data)
+    print(report_command)
     return report_command
 
 def parsing_data_cluster(data, broker, flags=None):
@@ -111,8 +109,7 @@ def parsing_data_cluster(data, broker, flags=None):
         zone = i
         id_zone = data[i]['id_zone']
         json_data = data[i]['cluster'][flags]
-    respons = initialiaze_command_cluster(json_data, zone, id_zone, flags)
-    kafka_lib.producer_send(broker, "api_cluster", respons)
+    initialiaze_command_cluster(json_data, zone, id_zone, flags)
 
 
 def initialiaze_command_cluster(data, zone, id_zone, flags):
