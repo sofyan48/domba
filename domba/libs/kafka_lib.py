@@ -1,5 +1,4 @@
 from kafka import KafkaConsumer
-# from kafka import KafkaProducer
 from json import loads, dumps
 
 def get_kafka_consumer(broker, topic, group_id):
@@ -9,7 +8,7 @@ def get_kafka_consumer(broker, topic, group_id):
                     topic,
                     bootstrap_servers=[broker],
                     auto_offset_reset='earliest',
-                    group_id='my-group',
+                    # group_id='my-group',
                     enable_auto_commit=True,
                     value_deserializer=lambda x: loads(x.decode('utf-8')))
     except Exception as e:

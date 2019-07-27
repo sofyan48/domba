@@ -1,6 +1,7 @@
 from domba.libs.libcommand.parse import parser
 from domba.libs import command_lib
 from domba.libs import utils
+import json
 
 def libknot_json(data):
     initialiaze_command = parser.initialiaze(data)
@@ -88,17 +89,47 @@ def zone_commit(zone=None):
 def parsing_data_general(data, broker):
     id_zone = None
     json_data = None
+    command_type = None
+    zone = None
     for i in data:
+        zone = i
+        command_type = data[i]['command']
         id_zone = data[i]['id_zone']
         json_data = data[i]['general']
     data = {
-        "command": json_data
+        "command": json_data,
+        "zone": zone
     }
-    initialiaze_command_general(data, id_zone)
+    command_data = initialiaze_command_general(data, id_zone, command_type)
+    if not command_data:
+        utils.log_err("Command Not Supported")
+    else:
+        dict_command = json.loads(command_data['data'])
+        try:
+            status = dict_command['status']
+        except Exception:
+            status = True
+        if not status:
+            utils.log_err("Command Not Execute")
+            utils.log_err(dict_command['error'])
+        else:
+            utils.log_info("Command Execute")
+            utils.log_info(dict_command)
+            
+    
 
-def initialiaze_command_general(data, id_zone):
-    report_command = libknot_json(data)
-    print(report_command)
+def initialiaze_command_general(data, id_zone, command):
+    report_command = None
+    if command == 'config':
+        begin(data['zone'])
+        report_command = libknot_json(data)
+        commit(data['zone'])
+    elif command == 'zone':
+        zone_begin(data['zone'])
+        report_command = libknot_json(data)
+        zone_commit(data['zone'])
+    else:
+        report_command = False
     return report_command
 
 def parsing_data_cluster(data, broker, flags=None):
