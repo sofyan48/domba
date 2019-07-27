@@ -16,7 +16,7 @@ class Start(Base):
         -h --help                             Print usage
     """
     def execute(self):
-        knot_lib.utils.check_root()
+        # knot_lib.utils.check_root()
         broker_env = env_lib.utils.get_env_values_broker()
         broker = broker_env['broker']+":"+broker_env['port']
         topic = broker_env['topic']
